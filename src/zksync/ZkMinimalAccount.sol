@@ -148,7 +148,7 @@ contract ZkMinimalAccount is IAccount, Ownable {
         // Check the signature
         bytes32 txHash = _transaction.encodeHash();
         // (_transaction.signature, txHash);
-        // bytes32 convertedHash = MessageHashUtils.toEthSignedMessageHash(txHash); PC said we don't need this..already in the correct format...
+        bytes32 convertedHash = MessageHashUtils.toEthSignedMessageHash(txHash); // PC said we don't need this..already in the correct format...
         address signer = ECDSA.recover(convertedHash, _transaction.signature);
         bool isValidSigner = signer == owner();
         if (isValidSigner) {
@@ -176,7 +176,7 @@ contract ZkMinimalAccount is IAccount, Ownable {
             );
         } else {
             bool success;
-            assembly {
+            assembly ("memory-safe") {
                 success := call(
                     gas(),
                     to,
