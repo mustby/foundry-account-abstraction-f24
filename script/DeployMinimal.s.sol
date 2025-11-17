@@ -11,16 +11,13 @@ contract DeployMinimal is Script {
         deployMinimalAccount();
     }
 
-    function deployMinimalAccount()
-        public
-        returns (HelperConfig, MinimalAccount)
-    {
+    function deployMinimalAccount() public returns (HelperConfig, MinimalAccount) {
         HelperConfig helperConfig = new HelperConfig();
         HelperConfig.NetworkConfig memory config = helperConfig.getConfig();
 
         vm.startBroadcast(config.account);
         MinimalAccount minimalAccount = new MinimalAccount(config.entryPoint);
-        minimalAccount.transferOwnership(config.account);
+        minimalAccount.transferOwnership(config.account); // config.account or msg.sender?
         vm.stopBroadcast();
         return (helperConfig, minimalAccount);
     }

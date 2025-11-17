@@ -62,16 +62,10 @@ contract SendPackedUserOp is Script {
     ) public view returns (PackedUserOperation memory) {
         // 1. Generate the unsigned data
         uint256 nonce = vm.getNonce(minimalAccount) - 1;
-        PackedUserOperation memory userOp = _generateUnsignedUserOperation(
-            callData,
-            minimalAccount,
-            nonce
-        );
+        PackedUserOperation memory userOp = _generateUnsignedUserOperation(callData, minimalAccount, nonce);
 
         // 2. Get the userOp Hash
-        bytes32 userOpHash = IEntryPoint(config.entryPoint).getUserOpHash(
-            userOp
-        );
+        bytes32 userOpHash = IEntryPoint(config.entryPoint).getUserOpHash(userOp);
         bytes32 digest = userOpHash.toEthSignedMessageHash();
 
         // 3. Sign it, and return it
@@ -88,31 +82,26 @@ contract SendPackedUserOp is Script {
         return userOp;
     }
 
-    function _generateUnsignedUserOperation(
-        bytes memory callData,
-        address sender,
-        uint256 nonce
-    ) internal pure returns (PackedUserOperation memory) {
+    function _generateUnsignedUserOperation(bytes memory callData, address sender, uint256 nonce)
+        internal
+        pure
+        returns (PackedUserOperation memory)
+    {
         uint128 verificationGasLimit = 16777216;
         uint128 callGasLimit = verificationGasLimit;
         uint128 maxPriorityFeePerGas = 256;
         uint128 maxFeePerGas = maxPriorityFeePerGas;
 
-        return
-            PackedUserOperation({
-                sender: sender,
-                nonce: nonce,
-                initCode: hex"",
-                callData: callData,
-                accountGasLimits: bytes32(
-                    (uint256(verificationGasLimit) << 128) | callGasLimit
-                ),
-                preVerificationGas: verificationGasLimit,
-                gasFees: bytes32(
-                    (uint256(maxPriorityFeePerGas) << 128) | maxFeePerGas
-                ),
-                paymasterAndData: hex"",
-                signature: hex""
-            });
+        return PackedUserOperation({
+            sender: sender,
+            nonce: nonce,
+            initCode: hex"",
+            callData: callData,
+            accountGasLimits: bytes32((uint256(verificationGasLimit) << 128) | callGasLimit),
+            preVerificationGas: verificationGasLimit,
+            gasFees: bytes32((uint256(maxPriorityFeePerGas) << 128) | maxFeePerGas),
+            paymasterAndData: hex"",
+            signature: hex""
+        });
     }
 }
