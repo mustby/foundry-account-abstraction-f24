@@ -116,6 +116,7 @@ contract MinimalAccountTest is Test {
         // Assert
     }
 
+    // The live entrypoint contract needs to be able to execute commands on our contract...
     function testEntryPointCanExecuteCommands() public {
         // Arrange
         assertEq(usdc.balanceOf(address(minimalAccount)), 0);
@@ -140,7 +141,7 @@ contract MinimalAccountTest is Test {
         // Act
 
         vm.prank(randomuser);
-        IEntryPoint(helperConfig.getConfig().entryPoint).handleOps(ops, payable(randomuser));
+        IEntryPoint(helperConfig.getConfig().entryPoint).handleOps(ops, payable(randomuser)); // random user calls handleOps on our behalf...
 
         // Assert
         assertEq(usdc.balanceOf(address(minimalAccount)), AMOUNT);

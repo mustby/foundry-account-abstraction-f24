@@ -3,6 +3,7 @@
 pragma solidity ^0.8.24;
 
 import {Script} from "lib/forge-std/src/Script.sol";
+import {console2} from "lib/forge-std/src/console2.sol";
 import {EntryPoint} from "lib/account-abstraction/contracts/core/EntryPoint.sol";
 
 contract HelperConfig is Script {
@@ -59,7 +60,7 @@ contract HelperConfig is Script {
 
         // deploy a mock entry point contract
 
-        // console2.log("Deploying Mocks..."); // I was told by GH Copilot to remove this line
+        console2.log("Deploying Mocks..."); // I was told by GH Copilot to remove this line
         vm.startBroadcast(ANVIL_DEFAULT_ACCOUNT);
         EntryPoint entryPoint = new EntryPoint();
         vm.stopBroadcast();
